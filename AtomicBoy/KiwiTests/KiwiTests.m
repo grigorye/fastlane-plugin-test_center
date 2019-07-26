@@ -19,6 +19,16 @@ describe(@"KiwiDemoTests", ^{
 });
 
 describe(@"KiwiDemoTests", ^{
+    context(@"testAmpersand", ^{
+        it(@"Ultimate Colosseum Arena & Exclusive Borghese Gallery Tour", ^{
+            NSString *expression = @"Ultimate Colosseum Arena & Exclusive Borghese Gallery Tour";
+            NSString *expectation = @"Optional(\"Germaine's Hawaiian Luau\")";
+            [[expression should] equal:expectation];
+        });
+    });
+});
+
+describe(@"KiwiDemoTests", ^{
     context(@"test1", ^{
         it(@"2 + 2 = 4", ^{
             [[theValue(2 + 2) should] equal:theValue(4)];
