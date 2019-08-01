@@ -15,6 +15,7 @@ module TestCenter
         end
         @only_testing = options[:only_testing]
         @skip_testing = options[:skip_testing]
+        @combine_testables = options[:combine_testables]
         @invocation_based_tests = options[:invocation_based_tests]
       end
 
@@ -46,8 +47,12 @@ module TestCenter
       def only_testing_to_testables_tests
         tests = Hash.new { |h, k| h[k] = [] }
         @only_testing.sort.each do |test_identifier|
-          testable = test_identifier.split('/', 2)[0]
-          tests[testable] << test_identifier
+          if @combine_testables
+            tests['All-Only-Testing'] << test_identifier
+          else
+            testable = test_identifier.split('/', 2)[0]
+            tests[testable] << test_identifier
+          end
         end
         tests
       end

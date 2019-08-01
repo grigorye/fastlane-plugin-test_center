@@ -194,6 +194,15 @@ module Fastlane
             is_string: false,
             default_value: nil,
             type: Proc
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :combine_testables,
+            description: 'Combine all testables into a single run',
+            env_name: "FL_MULTI_SCAN_COMBINE_TESTABLES",
+            type: Boolean,
+            is_string: false,
+            default_value: false,
+            optional: true
           )
         ]
       end
