@@ -17,6 +17,7 @@ module TestCenter
         @given_output_types = multi_scan_options[:output_types]
         @given_output_files = multi_scan_options[:output_files]
         @invocation_based_tests = multi_scan_options[:invocation_based_tests]
+        @combine_testables = multi_scan_options[:combine_testables]
         @scan_options = multi_scan_options.reject do |option, _|
           %i[
             output_directory
@@ -32,6 +33,7 @@ module TestCenter
             testrun_completed_block
             output_types
             output_files
+            combine_testables
           ].include?(option)
         end
         @scan_options[:clean] = false
