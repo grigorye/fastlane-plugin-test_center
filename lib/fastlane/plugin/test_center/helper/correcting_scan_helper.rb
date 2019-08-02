@@ -78,7 +78,7 @@ module TestCenter
             return true
           end
 
-          if @batch_count > 1 || @testables_count > 1 
+          if @batch_count > 1 || (@testables_count > 1 || @combine_testables)
             current_batch = 1
   
             testable_tests.each_slice((testable_tests.length / @batch_count.to_f).round).to_a.each do |tests_batch|
