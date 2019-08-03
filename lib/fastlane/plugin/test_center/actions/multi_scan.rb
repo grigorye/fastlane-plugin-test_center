@@ -10,7 +10,7 @@ module Fastlane
       def self.run(params)
         unless Helper.test?
           FastlaneCore::PrintTable.print_values(
-            config: params._values.select { |k, _| %i[try_count batch_count invocation_based_tests fail_build quit_simulators].include?(k) },
+            config: params._values.select { |k, _| %i[try_count batch_count invocation_based_tests combine_testables fail_build quit_simulators].include?(k) },
             title: "Summary for multi_scan (test_center v#{Fastlane::TestCenter::VERSION})"
           )
         end
@@ -88,6 +88,7 @@ module Fastlane
           testrun_completed_block
           test_without_building
           invocation_based_tests
+          combine_testables
           output_types
           output_files
         ]
@@ -194,6 +195,15 @@ module Fastlane
             is_string: false,
             default_value: nil,
             type: Proc
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :combine_testables,
+            description: 'Combine all testables into a single run',
+            env_name: "FL_MULTI_SCAN_COMBINE_TESTABLES",
+            type: Boolean,
+            is_string: false,
+            default_value: false,
+            optional: true
           )
         ]
       end

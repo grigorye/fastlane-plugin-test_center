@@ -17,6 +17,7 @@ module TestCenter
         @given_output_types = multi_scan_options[:output_types]
         @given_output_files = multi_scan_options[:output_files]
         @invocation_based_tests = multi_scan_options[:invocation_based_tests]
+        @combine_testables = multi_scan_options[:combine_testables]
         @scan_options = multi_scan_options.reject do |option, _|
           %i[
             output_directory
@@ -32,6 +33,7 @@ module TestCenter
             testrun_completed_block
             output_types
             output_files
+            combine_testables
           ].include?(option)
         end
         @scan_options[:clean] = false
@@ -76,7 +78,7 @@ module TestCenter
             return true
           end
 
-          if @batch_count > 1 || @testables_count > 1 
+          if @batch_count > 1 || (@testables_count > 1 || @combine_testables)
             current_batch = 1
   
             testable_tests.each_slice((testable_tests.length / @batch_count.to_f).round).to_a.each do |tests_batch|

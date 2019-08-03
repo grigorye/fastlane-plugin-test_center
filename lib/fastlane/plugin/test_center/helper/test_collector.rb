@@ -15,6 +15,7 @@ module TestCenter
         end
         @only_testing = options[:only_testing]
         @skip_testing = options[:skip_testing]
+        @combine_testables = options[:combine_testables]
         @invocation_based_tests = options[:invocation_based_tests]
       end
 
@@ -32,11 +33,15 @@ module TestCenter
 
       def testables
         unless @testables
-          if @only_testing
-            @testables ||= only_testing_to_testables_tests.keys
+          if @combine_testables
+            @testables = ['All-Combined']
           else
-            @testables ||= Plist.parse_xml(@xctestrun_path).keys.reject do |retrievedTestable| 
-              Fastlane::Actions::TestsFromXctestrunAction.ignoredTestables.include?(retrievedTestable)
+            if @only_testing
+              @testables ||= only_testing_to_testables_tests.keys
+            else
+              @testables ||= Plist.parse_xml(@xctestrun_path).keys.reject do |retrievedTestable| 
+                Fastlane::Actions::TestsFromXctestrunAction.ignoredTestables.include?(retrievedTestable)
+              end
             end
           end
         end
@@ -46,8 +51,12 @@ module TestCenter
       def only_testing_to_testables_tests
         tests = Hash.new { |h, k| h[k] = [] }
         @only_testing.sort.each do |test_identifier|
-          testable = test_identifier.split('/', 2)[0]
-          tests[testable] << test_identifier
+          if @combine_testables
+            tests['All-Combined'] << test_identifier
+          else
+            testable = test_identifier.split('/', 2)[0]
+            tests[testable] << test_identifier
+          end
         end
         tests
       end
@@ -74,6 +83,15 @@ module TestCenter
               @testables_tests.each_key do |testable|
                 @testables_tests[testable] -= skipped_testable_tests[testable]
               end
+            end
+            if @combine_testables
+              combined_testables_tests = Hash.new { |h, k| h[k] = [] }
+              @testables_tests.each do |key, value|
+                value.each do |test|
+                  combined_testables_tests['All-Combined'] << test
+                end
+              end
+              @testables_tests = combined_testables_tests
             end
           end
         end
