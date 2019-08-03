@@ -13,7 +13,9 @@ module TestCenter
 
           @testables = []
           report_file.elements.each('testsuites') do |testsuites_element|
-            @testables << Testable.new(testsuites_element)
+            testsuites_element.elements.each('testsuite') do |testsuite_element|
+              @testables << Testable.new(testsuite_element)
+            end
           end
         end
 
